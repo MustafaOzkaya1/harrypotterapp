@@ -16,7 +16,7 @@ class CharacterModel {
   bool? hogwartsStudent;
   bool? hogwartsStaff;
   String? actor;
-  List<String>? alternateActors; // Changed to List<String> instead of List<Null>
+  List<String>? alternateActors; 
   bool? alive;
   String? image;
 
@@ -42,6 +42,29 @@ class CharacterModel {
     this.alive,
     this.image,
   });
+
+
+  CharacterModel.empty()
+      : id = null,
+        name = null,
+        alternateNames = null,
+        species = null,
+        gender = null,
+        house = null,
+        dateOfBirth = null,
+        yearOfBirth = null,
+        wizard = null,
+        ancestry = null,
+        eyeColour = null,
+        hairColour = null,
+        wand = null,
+        patronus = null,
+        hogwartsStudent = null,
+        hogwartsStaff = null,
+        actor = null,
+        alternateActors = null,
+        alive = null,
+        image = null;
 
   CharacterModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
