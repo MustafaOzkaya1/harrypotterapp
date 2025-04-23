@@ -5,10 +5,10 @@ import 'package:harrypotterapp/models/character_model.dart';
 import 'package:harrypotterapp/core/services/service.dart';
 import 'package:harrypotterapp/views/detailpage/character_detail_screen.dart';
 
-// Provider to fetch characters
+// Karakterleri çekmek için bir provider oluşturuyoruz
 final characterProvider = FutureProvider<List<CharacterModel>>((ref) async {
   final service = Service();
-  return service.getCharacterInfo();
+  return service.getCharacterInfo();  // Karakter verilerini alıyoruz
 });
 
 class HomeScreen extends ConsumerWidget {
@@ -16,15 +16,15 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Watch the characterProvider to get the data or error state
+    // Karakter verilerini almak için provider'ı izliyoruz
     final characterAsyncValue = ref.watch(characterProvider);
 
-    // Get the screen's height and width for responsive design
+    // Ekranın genişliğini ve yüksekliğini alarak responsive bir tasarım yapıyoruz
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,  // Arka plan rengi
+      backgroundColor: AppColors.backgroundColor,  // Arka plan rengini belirledik
       appBar: AppBar(
         backgroundColor: AppColors.primaryColor,
         title: const Text(
@@ -35,30 +35,30 @@ class HomeScreen extends ConsumerWidget {
         elevation: 0,
       ),
       body: characterAsyncValue.when(
-        // If data is fetched successfully
+        // Veriler başarılı bir şekilde geldiyse
         data: (data) {
-          return SingleChildScrollView(  // Allow the screen to scroll
+          return SingleChildScrollView(  // Ekranın kaymasını sağlıyoruz
             child: GridView.builder(
-              physics: NeverScrollableScrollPhysics(), // Disable grid scrolling, allow single scroll
+              physics: NeverScrollableScrollPhysics(), // GridView'in kendi kaymasını engelliyoruz, tek bir scroll olsun
               padding: EdgeInsets.all(15),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: screenWidth > 600 ? 3 : 2, // 2 cards on mobile, 3 on tablet
-                crossAxisSpacing: 15, // Horizontal space between cards
-                mainAxisSpacing: 15, // Vertical space between cards
-                childAspectRatio: 0.7, // Aspect ratio of cards
+                crossAxisCount: screenWidth > 600 ? 3 : 2, // Mobilde 2, tablette 3 kart gösteriyoruz
+                crossAxisSpacing: 15, // Kartlar arasındaki yatay boşluk
+                mainAxisSpacing: 15, // Kartlar arasındaki dikey boşluk
+                childAspectRatio: 0.7, // Kartların boyut oranını ayarlıyoruz
               ),
               itemCount: data.length,
-              shrinkWrap: true,  // Allow content to fit on the screen
+              shrinkWrap: true,  // İçeriğin ekranı kaplayabilmesi için bu özelliği açıyoruz
               itemBuilder: (context, index) {
                 final character = data[index];
                 return GestureDetector(
                   onTap: () {
-                    // Navigate to character detail page
+                    // Karaktere tıklayınca detay sayfasına yönlendireceğiz
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => CharacterDetailPage(
-                          character: character,  // Pass character data to detail page
+                          character: character,  // Karakter verisini detay sayfasına gönderiyoruz
                         ),
                       ),
                     );
@@ -66,26 +66,26 @@ class HomeScreen extends ConsumerWidget {
                   child: Card(
                     elevation: 5.0,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(15),  // Kartların köşelerini yuvarlıyoruz
                     ),
                     color: AppColors.whiteColor,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Display character image or a '?' symbol if image is unavailable
+                        // Eğer karakterin resmi varsa göster, yoksa '?' simgesi göster
                         character.image != null && character.image!.isNotEmpty
                             ? ClipRRect(
                                 borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
                                 child: Image.network(
                                   character.image!,
                                   fit: BoxFit.cover,
-                                  height: screenHeight * 0.13, // Set height dynamically based on screen height
+                                  height: screenHeight * 0.13, // Resmin yüksekliğini ekranın yüksekliğine göre ayarlıyoruz
                                   width: double.infinity,
                                 ),
                               )
                             : Center(
                                 child: Text(
-                                  '?',
+                                  '?',  // Resim yoksa '?' yazıyoruz
                                   style: TextStyle(
                                     fontSize: 75,
                                     color: AppColors.greyTextColor,
@@ -96,7 +96,7 @@ class HomeScreen extends ConsumerWidget {
                         Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: Text(
-                            character.name ?? 'No Name',
+                            character.name ?? 'No Name',  // Eğer karakter ismi yoksa 'No Name' yazıyoruz
                             style: TextStyle(
                                 fontSize: 15, fontWeight: FontWeight.bold, color: AppColors.blackTextColor),
                           ),
@@ -104,7 +104,7 @@ class HomeScreen extends ConsumerWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10.0),
                           child: Text(
-                            'Gender: ${character.gender ?? 'Unknown'}',
+                            'Gender: ${character.gender ?? 'Unknown'}',  // Cinsiyet bilgisini ekliyoruz
                             style: TextStyle(
                               fontSize: 14,
                               color: AppColors.greyTextColor,
@@ -114,7 +114,7 @@ class HomeScreen extends ConsumerWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10.0),
                           child: Text(
-                            'Species: ${character.species ?? 'Unknown'}',
+                            'Species: ${character.species ?? 'Unknown'}',  // Tür bilgisini ekliyoruz
                             style: TextStyle(
                               fontSize: 14,
                               color: AppColors.greyTextColor,
@@ -124,7 +124,7 @@ class HomeScreen extends ConsumerWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10.0),
                           child: Text(
-                            character.alive == true ? 'Live' : 'Dead',
+                            character.alive == true ? 'Live' : 'Dead',  // Yaşayan ya da ölü olduğu bilgisini yazıyoruz
                             style: TextStyle(
                               color: character.alive == true
                                   ? Colors.green
@@ -141,11 +141,11 @@ class HomeScreen extends ConsumerWidget {
             ),
           );
         },
-        // While loading data
+        // Veriler yükleniyor
         loading: () => Center(
           child: CircularProgressIndicator(color: AppColors.primaryLightColor),
         ),
-        // If there is an error
+        // Eğer bir hata oluşursa
         error: (error, stack) {
           return Center(
             child: Column(
@@ -154,7 +154,7 @@ class HomeScreen extends ConsumerWidget {
                 Icon(Icons.error_outline, color: Colors.red, size: 50),
                 SizedBox(height: 10),
                 Text(
-                  'Bir hata oluştu: $error',
+                  'Bir hata oluştu: $error',  // Hata mesajını yazıyoruz
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
